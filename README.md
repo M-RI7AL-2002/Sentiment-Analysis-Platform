@@ -67,6 +67,3 @@ Le projet suit une structure bien organisée comprenant :
 
 Lien vers le rapport complet du projet (à décommenter plus tard) [Rapport PFE](./Rapportpfe-RihalMohamed-ChaibiRachid.docx)
 
-## 🚀 Démarrer le serveur de développement
-```bash
-python manage.py runserver
