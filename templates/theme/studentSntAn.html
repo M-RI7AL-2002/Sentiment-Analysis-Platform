@@ -1,0 +1,676 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Teacher Analysis Dashboard</title>
+
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="stylesheet" href="{%static './vendor/owl-carousel/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static './vendor/owl-carousel/css/owl.theme.default.min.css' %}">
+    <link href="{% static './vendor/jqvmap/css/jqvmap.min.css' %}" rel="stylesheet">
+    <link href="{% static './css/style.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #map {
+            height: 400px; /* Adjust the height as needed */
+            width: 100%; /* Full width */
+        }
+        #searchStudent {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: black;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+.table tr:hover {
+    background-color: #f5f5f5;
+}
+
+    </style>
+    <style>
+       /* Style for the search bar */
+       #searchStudentTable2 {
+        width: calc(100% - 20px); /* Adjust the width as needed */
+        padding: 10px; /* Add padding for better appearance */
+        border: 1px solid #ccc; /* Add border */
+        border-radius: 5px; /* Add border radius */
+        background-color: #f8f9fa; /* Add background color */
+        margin-bottom: 20px; /* Add some bottom margin for spacing */
+        box-sizing: border-box; /* Ensure padding and border are included in the width */
+    }
+
+    /* Style for the table */
+    #studentTable2 {
+        width: 100%; /* Set the width to 100% */
+        font-size: 16px; /* Increase font size for better readability */
+    }
+    </style>
+
+</head>
+
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <a href="{% url 'dashboard' %}" class="brand-logo">
+                <img class="logo-abbr" src="{% static 'images/logo.png' %}" alt="">
+                <img class="logo-compact" src="{% static 'images/logo-text.png' %}" alt="">
+                <img class="brand-title" src="{% static 'images/logo-text.png' %}" alt="">
+            </a>
+
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="line"></span><span class="line"></span><span class="line"></span>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content">
+                <nav class="navbar navbar-expand">
+                    <div class="collapse navbar-collapse justify-content-between">
+                        <div class="header-left">
+                            <div class="search_bar dropdown">
+                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
+                           
+                                </span>
+                                <div class="dropdown-menu p-0 m-0">
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <ul class="navbar-nav header-right">
+                          
+                            <li class="nav-item dropdown header-profile">
+                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                                    <i class="mdi mdi-account"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a href="{% url 'profile' %}" class="dropdown-item">
+                                        <i class="icon-user"></i>
+                                        <span class="ml-2">Profile </span>
+                                    </a>
+                                    
+                                    <a href="{% url 'logout' %}" class="dropdown-item">
+                                        <i class="icon-key"></i>
+                                        <span class="ml-2">Logout </span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="quixnav">
+            <div class="quixnav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li class="nav-label first">Main Menu</li>
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                                class="icon icon-single-04"></i><span class="nav-text">Dashboard</span></a>
+                        <ul aria-expanded="false">
+                            <li><a href=" {% url 'teacherAn' %} ">Teachers Analytics</a></li>
+                            <li><a href="{% url 'courseAn' %}">Courses Analytics</a></li>
+                            <li><a href="{% url 'studentAn' %}">Student sentiment Analytics</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-label">Apps</li>
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i
+                                class="icon icon-app-store"></i><span class="nav-text">Apps</span></a>
+                        <ul aria-expanded="false">
+                            <li><a href="{% url 'profile' %}">Profile</a></li>
+                            
+                            <li><a href="{% url 'todo_list' %}">To do List</a></li>
+                        </ul>
+                    </li>
+                    
+                </ul>
+            </div>
+
+
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <!-- row -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="stat-widget-two card-body">
+                                <div class="stat-content">
+                                    <div class="stat-text">Total Feedbacks </div>
+                                    <div class="stat-digit"> {{ total_feedbacks }}</div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-primary w-75" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="stat-widget-two card-body">
+                                <div class="stat-content">
+                                    <div class="stat-text">Positive Feedback</div>
+                                    <div class="stat-digit"> {{ positive_feedback }}</div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success w-85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="stat-widget-two card-body">
+                                <div class="stat-content">
+                                    <div class="stat-text">Negative Feedbacks</div>
+                                    <div class="stat-digit"> {{ negative_feedback }}</div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-danger w-65" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div> 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="stat-widget-two card-body">
+                                <div class="stat-content">
+                                    <div class="stat-text">Neutral Feedbacks</div>
+                                    <div class="stat-digit"> {{ neutral_feedback }}</div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-warning w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                  
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /# card -->
+                    </div>
+                    <!-- /# column -->
+                </div>
+                <div class="row">
+                    <div class="col-xl-8 col-lg-8 col-md-8">
+                        <div class="card">
+                            <div class="col-12">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        <h1 class="card-text" style="color: {{ sentiment_color }};">{{ sentiment_summary }}</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-8">
+                                        <div id="m"><canvas id="sentimentDistribution"></canvas>
+                                            <script>
+                                                document.addEventListener("DOMContentLoaded", function() {
+                                                    var ctx = document.getElementById('sentimentDistribution').getContext('2d');
+                                                    var sentimentDistribution = new Chart(ctx, {
+                                                        type: 'pie',
+                                                        data: {
+                                                            labels: ['Positive', 'Neutral', 'Negative'],
+                                                            datasets: [{
+                                                                data: [{{ positive_feedback }}, {{ neutral_feedback }},{{ negative_feedback }}],
+                                                                backgroundColor: ['#4caf50', '#ffeb3b', '#f44336']
+                                                            }]
+                                                        }
+                                                    });
+                                                });
+                                            </script></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="m-t-10">
+                                    <div class="card-body">
+                                        <input type="text" id="searchStudent" onkeyup="searchFunction('studentTable', 'searchStudent')" placeholder="Search for students..">
+                                        <h4 class="card-title">Average Sentiment Per Student</h4>
+                                        <div class="table-responsive">
+                                            <table id="studentTable" class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student</th>
+                                                        <th>Average Sentiment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for student, avg_sentiment in student_sentiment %}
+                                                    <tr>
+                                                        <td>{{ student }}</td>
+                                                        <td>{{ avg_sentiment }}</td>
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="2">No data available.</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <script>
+                                    function searchFunction(tableId, inputId) {
+                                        var input, filter, table, tr, td, i, txtValue;
+                                        input = document.getElementById(inputId);
+                                        filter = input.value.toUpperCase();
+                                        table = document.getElementById(tableId);
+                                        tr = table.getElementsByTagName("tr");
+                                        for (i = 0; i < tr.length; i++) {
+                                            td = tr[i].getElementsByTagName("td")[0]; // Search only in the first column (Student)
+                                            if (td) {
+                                                txtValue = td.textContent || td.innerText;
+                                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                    tr[i].style.display = "";
+                                                } else {
+                                                    tr[i].style.display = "none";
+                                                }
+                                            }
+                                        }
+                                    }
+                                    </script>
+                                    
+                                </div>
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Common Words in Positive Feedback</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-body">
+                                   
+                                    <div class="wordcloud-container">
+                                      
+                                        <img src="data:image/png;base64,{{ positive_wordcloud }}" alt="Positive Word Cloud">
+                                    </div>
+                                </div> 
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Common Words in Negative Feedback</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-body">
+                                       
+                                        <div class="wordcloud-container">
+                                          
+                                            <img src="data:image/png;base64,{{ negative_wordcloud }}" alt="Negative Word Cloud">
+                                        </div>
+                                    </div> 
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+
+                    <div class="col-xl-8 col-lg-8 col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Sentiment Trends Overview</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-8">
+                                        <div id="m">
+                                            
+                                            <canvas id="sentimentTrendChart"></canvas>
+                                            <script>
+                                              var ctx = document.getElementById('sentimentTrendChart').getContext('2d');
+    var sentimentTrendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{% for month in sentiment_trend %}'{{ month.month }}',{% endfor %}],
+            datasets: [
+                {
+                    label: 'Positive',
+                    data: [{% for month in sentiment_trend %}{{ month.positive }},{% endfor %}],
+                    borderColor: '#28a745',
+                    fill: false
+                },
+                {
+                    label: 'Negative',
+                    data: [{% for month in sentiment_trend %}{{ month.negative }},{% endfor %}],
+                    borderColor: '#dc3545',
+                    fill: false
+                },
+                {
+                    label: 'Neutral',
+                    data: [{% for month in sentiment_trend %}{{ month.neutral }},{% endfor %}],
+                    borderColor: '#ffc107',
+                    fill: false
+                }
+            ]
+        },
+    });
+                                            </script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-4 col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="m-t-10">
+                                    <h4 class="card-title">add student</h4>
+                                    
+                                    <form method="post" action="{%url 'add_student' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="fname">First Name</label>
+                                            <br>
+                                            {{ form.fname }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lname">Last Name</label>
+                                            <br>
+                                            {{ form.lname }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email</label>
+                                            <br>
+                                            {{ form.email }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Username</label>
+                                            <br>
+                                            {{ form.username }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Password</label>
+                                            <br>
+                                            {{ form.password }}
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Add student</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="wide">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="m-t-10">
+                                    <input type="text" id="searchStudentTable2" onkeyup="searchFunctionTable2()" placeholder="Search for students..">
+                                    <h4 class="card-title">List of Students</h4>
+                                    <div class="table-responsive">
+                                        <table id="studentTable2" class="table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>Username</th>
+                                                    <th>Email</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for student in students %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ student.fname }}</td>
+                                                    <td>{{ student.lname }}</td>
+                                                    <td>{{ student.username }}</td>
+                                                    <td>{{ student.email }}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary btn-sm" onclick="openEditModal('{{ student.id }}', '{{ student.fname }}', '{{ student.lname }}', '{{ student.username }}', '{{ student.email }}')">Edit</button>
+                                                        <form method="post" action="{% url 'delete_student' student.id %}" style="display: inline;">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                    <td colspan="6">No students found.</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                
+                                <!-- Edit Modal -->
+                                <div class="modal" id="editModal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edit Student</h4>
+                                                <button type="button" class="close" data-dismiss="modal">&times;"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="editForm" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" id="studentId" name="id">
+                                                    <div class="form-group">
+                                                        <label for="fname">First Name:</label>
+                                                        <input type="text" class="form-control" id="fname" name="fname">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="lname">Last Name:</label>
+                                                        <input type="text" class="form-control" id="lname" name="lname">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="username">Username:</label>
+                                                        <input type="text" class="form-control" id="username" name="username">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="email">Email:</label>
+                                                        <input type="email" class="form-control" id="email" name="email">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="password">Password:</label>
+                                                        <input type="password" class="form-control" id="password" name="password">
+                                                    </div>
+                                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                                <script>
+                                function searchFunctionTable2() {
+                                    var input, filter, table, tr, td, i, j, txtValue;
+                                    input = document.getElementById("searchStudentTable2");
+                                    filter = input.value.toUpperCase();
+                                    table = document.getElementById("studentTable2");
+                                    tr = table.getElementsByTagName("tr");
+                
+                                    for (i = 1; i < tr.length; i++) { // Start from 1 to skip the header row
+                                        tr[i].style.display = "none"; // Initially hide the row
+                                        td = tr[i].getElementsByTagName("td");
+                                        for (j = 0; j < td.length; j++) { // Search in all columns
+                                            if (td[j]) {
+                                                txtValue = td[j].textContent || td[j].innerText;
+                                                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                                    tr[i].style.display = "";
+                                                    break; // Break the loop if a match is found
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                
+                                function openEditModal(id, fname, lname, username, email) {
+                                    document.getElementById('studentId').value = id;
+                                    document.getElementById('fname').value = fname;
+                                    document.getElementById('lname').value = lname;
+                                    document.getElementById('username').value = username;
+                                    document.getElementById('email').value = email;
+                                    document.getElementById('editForm').action = `/edit_student/${id}/`;
+                                    $('#editModal').modal('show');
+                                }
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Richa</a> 2019</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="{% static './vendor/global/global.min.js' %}"></script>
+    <script src="{% static './js/quixnav-init.js' %}"></script>
+    <script src="{% static './js/custom.min.js' %}"></script>
+
+
+    <!-- Vectormap -->
+    <script src="{%static './vendor/raphael/raphael.min.js' %}"></script>
+    <script src="{%static './vendor/morris/morris.min.js'  %}"></script>
+
+
+    <script src="{%static './vendor/circle-progress/circle-progress.min.js'%}"></script>
+    <script src="{%static './vendor/chart.js/Chart.bundle.min.js' %}"></script>
+
+    <script src="{% static './vendor/gaugeJS/dist/gauge.min.js' %}"></script>
+
+    <!--  flot-chart js -->
+    <script src="{% static './vendor/flot/jquery.flot.js' %}"></script>
+    <script src="{% static './vendor/flot/jquery.flot.resize.js' %}"></script>
+
+    <!-- Owl Carousel -->
+    <script src="{% static './vendor/owl-carousel/js/owl.carousel.min.js' %}"></script>
+
+    <!-- Counter Up -->
+    <script src="{% static './vendor/jqvmap/js/jquery.vmap.min.js'%}"></script>
+    <script src="{% static './vendor/jqvmap/js/jquery.vmap.usa.js' %}"></script>
+    <script src="{% static './vendor/jquery.counterup/jquery.counterup.min.js' %}"></script>
+
+
+    <script src="{% static './js/dashboard/dashboard-1.js' %}"></script>
+
+</body>
+
+</html>

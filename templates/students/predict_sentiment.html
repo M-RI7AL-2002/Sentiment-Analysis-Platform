@@ -1,0 +1,25 @@
+<!-- studentdb/templates/studentdb/predict_sentiment.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Sentiment</title>
+</head>
+<body>
+    <h1>Sentiment Prediction</h1>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="feedback" rows="4" cols="50" placeholder="Enter feedback text here..."></textarea><br>
+        <button type="submit">Predict Sentiment</button>
+    </form>
+
+    {% if sentiment %}
+        <h2>Prediction Result:</h2>
+        <p><strong>Feedback:</strong> {{ feedback_text }}</p>
+        <p><strong>Sentiment:</strong> {{ sentiment }}</p>
+        <p><strong>Probabilities:</strong> {{ probabilities }}</p>
+    {% endif %}
+</body>
+</html>

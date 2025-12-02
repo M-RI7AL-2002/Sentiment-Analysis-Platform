@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teachers</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Teachers</h1>
+    <ul>
+        {% for teacher in teachers %}
+        <li>
+            <strong>{{ teacher.fname }} {{ teacher.lname }}</strong> ({{ teacher.email }})
+            <form method="post" action="{% url 'submit_teacher_feedback' teacher.id %}">
+                {% csrf_token %}
+                <textarea name="feedback" placeholder="Write feedback here..." required></textarea>
+                <button type="submit">Submit Feedback</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
